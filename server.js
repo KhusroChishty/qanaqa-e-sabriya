@@ -1,8 +1,10 @@
+require('dotenv').config(); // Load environment variables
+
 const express = require('express');
 const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; // Use the PORT environment variable
 
 // Serve static files (like your index.html)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -24,3 +26,4 @@ app.get('*', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
