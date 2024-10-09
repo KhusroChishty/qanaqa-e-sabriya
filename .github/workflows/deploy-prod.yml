@@ -1,0 +1,29 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - prod  # Deploy to Production when pushing to the 'prod' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'  # Change to your Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy to Production
+        env:
+          NODE_ENV: production  # Set the environment variable
+        run: |
+          cp .env.prod .env
+          npm start  # or the appropriate command to deploy
