@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 1  # Only fetch the latest commit to save time
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -34,9 +36,9 @@ jobs:
           NODE_ENV: qa  # Set the environment variable
         run: |
           cp .env.qa .env
-          npm start  # or the appropriate command to deploy
+          nohup npm start &  # Run in the background
 
-      - name: Verify QA Deployment
+      - name: Verify Deployment (Optional)
         run: |
           sleep 30  # Wait for the server to start
-          curl -I http://your-qa-server.com  # Replace with your QA server URL
+          curl -I http://localhost:3000  # Check if the app is running
