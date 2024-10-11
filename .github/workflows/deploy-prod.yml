@@ -26,4 +26,4 @@ jobs:
           NODE_ENV: production  # Set the environment variable
         run: |
           cp .env.prod .env
-          npm start  # or the appropriate command to deploy
+          nohup npm start &  # Run in the background
