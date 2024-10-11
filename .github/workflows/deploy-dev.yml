@@ -12,18 +12,34 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 1  # Only fetch the latest commit to save time
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '20'  # Change to your Node.js version
 
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Deploy to Development
         env:
           NODE_ENV: development  # Set the environment variable
         run: |
           cp .env.dev .env
-          npm start  # or the appropriate command to deploy
+          nohup npm start &  # Run in the background
+
+      - name: Verify Deployment (Optional)
+        run: |
+          sleep 30  # Wait for the server to start
+          curl -I http://localhost:3000  # Check if the app is running
+
