@@ -18,8 +18,16 @@ jobs:
         with:
           node-version: '20'  # Change to your Node.js version
 
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci  # Use npm ci for faster installs
 
       - name: Deploy to Production
         env:
@@ -27,3 +35,8 @@ jobs:
         run: |
           cp .env.prod .env
           npm start  # or the appropriate command to deploy
+
+      - name: Verify Production Deployment
+        run: |
+          sleep 30  # Wait for the server to start
+          curl -I http://your-production-server.com  # Replace with your production server URL
